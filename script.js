@@ -30,6 +30,9 @@ let intervalWorking,
 // alert sound
 let alertSound
 
+// current controller state
+let controllerState
+
 const stateArr = [
   {
     name: 'working',
@@ -183,7 +186,9 @@ const CountDown = () => {
       alertSound.pause()
       // 9.2.9. get next index of state
       stateIndex === stateSequence.length - 1 ? stateIndex = 0 : stateIndex += 1
-      // 9.2.10. click start button
+      // 9.2.10. update controller state to stop
+      controllerState = 'stop'
+      // 9.2.11. click start button
       startController.click()
     }
   }, 1000)
@@ -209,57 +214,63 @@ const highlightState = () => {
 
 // new controller
 startController.addEventListener('click', () => {
-  // 1. clear interval time
-  clearInterval(stateArr[stateSequence[stateIndex]].interval)
-  // 2. clear all background color of controllers
-  startController.style.background = '#fff'
-  startController.style.borderStyle = 'none'
-  stopController.style.background = '#fff'
-  stopController.style.borderStyle = 'none'
-  resetController.style.background = '#fff'
-  // 3. highlight background color of start
-  startController.style.background = '#FFFF00'
-  startController.style.border = '2px solid #ff0000'
-  // 4. run timer
-  CountDown();
+  if(controllerState !== 'start'){
+    controllerState = 'start'
+    // 1. clear interval time
+    clearInterval(stateArr[stateSequence[stateIndex]].interval)
+    // 2. clear all background color of controllers
+    startController.style.background = '#fff'
+    startController.style.borderStyle = 'none'
+    stopController.style.background = '#fff'
+    stopController.style.borderStyle = 'none'
+    resetController.style.background = '#fff'
+    // 3. highlight background color of start
+    startController.style.background = '#FFFF00'
+    startController.style.border = '2px solid #ff0000'
+    // 4. run timer
+    CountDown();
+  }
 })
 
 stopController.addEventListener('click', () => {
-  // 1. clear interval time
-  clearInterval(stateArr[stateSequence[stateIndex]].interval)
-  // 2. clear all background color of controllers
-  startController.style.background = '#fff'
-  startController.style.borderStyle = 'none'
-  stopController.style.background = '#fff'
-  stopController.style.borderStyle = 'none'
-  resetController.style.background = '#fff'
-  // 3. highlight background color of stop
-  stopController.style.background = '#FFFF00'
-  stopController.style.border = '2px solid #ff0000'
-  // 4. get current datetime
-  dateCurrent = GetCurrentDateTime()
-  // 5. update stop column in the current row of table
-  const tbodyRef = document.querySelector('table').getElementsByTagName('tbody')[0];
-  const cell1Start = tbodyRef.children[0].children[0].innerText;
-  tbodyRef.children[0].children[1].innerText = dateCurrent
-  tbodyRef.children[0].children[2].innerText = Math.floor((new Date(dateCurrent) - new Date(cell1Start)) / 60000)
-  // 6. insert row table of manually break
-  const row = tbodyRef.insertRow(0)
-  let cell1 = row.insertCell(0)
-  let cell2 = row.insertCell(1)
-  let cell3 = row.insertCell(2)
-  let cell4 = row.insertCell(3)
-  cell1.innerHTML = `${dateCurrent}`
-  cell2.innerHTML = ``
-  cell3.innerHTML = ``
-  cell4.innerHTML = `manually break`
-  // 7. highlight row if activity row is break
-  if(tbodyRef.children[0].children[3].innerText === 'break') {
-    tbodyRef.children[0].style.background = '#CCCCFF'
-  }
-  // 7. highlight row if activity row is break
-  if(tbodyRef.children[0].children[3].innerText === 'manually break') {
-    tbodyRef.children[0].style.background = '#fadbd8'
+  if(controllerState !== 'stop'){
+    controllerState = 'stop'
+    // 1. clear interval time
+    clearInterval(stateArr[stateSequence[stateIndex]].interval)
+    // 2. clear all background color of controllers
+    startController.style.background = '#fff'
+    startController.style.borderStyle = 'none'
+    stopController.style.background = '#fff'
+    stopController.style.borderStyle = 'none'
+    resetController.style.background = '#fff'
+    // 3. highlight background color of stop
+    stopController.style.background = '#FFFF00'
+    stopController.style.border = '2px solid #ff0000'
+    // 4. get current datetime
+    dateCurrent = GetCurrentDateTime()  
+    // 5. update stop column in the current row of table
+    const tbodyRef = document.querySelector('table').getElementsByTagName('tbody')[0];
+    const cell1Start = tbodyRef.children[0].children[0].innerText;
+    tbodyRef.children[0].children[1].innerText = dateCurrent
+    tbodyRef.children[0].children[2].innerText = Math.floor((new Date(dateCurrent) - new Date(cell1Start)) / 60000)
+    // 6. insert row table of manually break
+    const row = tbodyRef.insertRow(0)
+    let cell1 = row.insertCell(0)
+    let cell2 = row.insertCell(1)
+    let cell3 = row.insertCell(2)
+    let cell4 = row.insertCell(3)
+    cell1.innerHTML = `${dateCurrent}`
+    cell2.innerHTML = ``
+    cell3.innerHTML = ``
+    cell4.innerHTML = `manually break`
+    // 7. highlight row if activity row is break
+    if(tbodyRef.children[0].children[3].innerText === 'break') {
+      tbodyRef.children[0].style.background = '#CCCCFF'
+    }
+    // 7. highlight row if activity row is break
+    if(tbodyRef.children[0].children[3].innerText === 'manually break') {
+      tbodyRef.children[0].style.background = '#fadbd8'
+    }
   }
 })
 
