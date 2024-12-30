@@ -5,6 +5,7 @@
   /* border: 1px solid #eee; */
 }
 
+
 /* header */
 .hdb {
   margin-bottom: 10px;
@@ -20,12 +21,12 @@
 
 .hdb-title {
   margin-left: 10px;
-  width: 90%;
+  width: 150px;
 }
 
 .hdb-control {
   margin-right: 20px;
-  width: 10%;
+  width: 200px;
   display: flex;
   justify-content: end;
   gap: 10px;
@@ -60,7 +61,7 @@
 
 /* container layout */
 .ctn-layout {
-  width: 100%;
+  width: 1080px;
   display: flex;
   justify-content: space-between;
 }
@@ -71,11 +72,13 @@
 }
 
 .ctn-layout-sub:first-child {
-  width: 90%;
+  width: 85%;
 }
 
 .ctn-layout-sub:last-child {
-  width: 10%;
+  width: 15%;
+  display: flex;
+  justify-content: end;
 }
 
 /* container */
@@ -142,19 +145,187 @@
 .log-layout > table {
   margin-left: 8px;
   border-collapse: collapse;
-  width: 800px;
+  width: 99%;
 }
 
 .log-layout > table > thead > tr > th {
   padding: 6px;
+  min-width: 86px;
+  max-width: 300px;
   border: 1px solid black;
   background-color: #000;
+  font-size: 12px;
   color: #fff;
   text-align: start;
 }
 
 .log-layout > table > tbody > tr > td {
-  padding: 6px;
+  padding: 5px;
   border: 1px solid black;
   font-size: 12px;
 }
+
+/* responsive */
+@media screen and (min-width: 0px) {
+  .ctn-layout {
+    width: 376px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 30px;
+  }
+
+  .ctn-layout-sub {
+    display: grid;
+    grid-template-columns: repeat(2, 170px);
+  } 
+
+  .ctn-layout-sub:first-child {
+    width: 100%;
+  }
+  
+  .ctn-layout-sub:last-child {
+    width: 100%;
+    display: flex;
+    justify-content: start;
+  }
+
+  .ctn {
+    padding: 5px;
+    width: 160px;
+    height: 180px;
+    border: 1px solid #aaa;
+    border-radius: 15px;
+    /* box-shadow: 5px 5px 5px lightgrey; */
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    gap: 5px;
+  }
+
+}
+
+@media screen and (min-width: 576px) {
+  .ctn-layout {
+    width: 576px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 30px;
+  }
+
+  .ctn-layout-sub {
+    display: grid;
+    grid-template-columns: repeat(3, 170px);
+  } 
+
+  .ctn {
+    padding: 5px;
+    width: 160px;
+    height: 180px;
+    border: 1px solid #aaa;
+    border-radius: 15px;
+    /* box-shadow: 5px 5px 5px lightgrey; */
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    gap: 5px;
+  }
+
+}
+
+@media screen and (min-width: 720px) {
+  .ctn-layout {
+    width: 720px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 30px;
+  }
+
+  .ctn-layout-sub {
+    display: grid;
+    grid-template-columns: repeat(4, 170px);
+  } 
+
+  .ctn {
+    padding: 5px;
+    width: 160px;
+    height: 180px;
+    border: 1px solid #aaa;
+    border-radius: 15px;
+    /* box-shadow: 5px 5px 5px lightgrey; */
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    gap: 5px;
+  }
+
+}
+
+@media screen and (min-width: 812px) {
+  .ctn-layout {
+    width: 812px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .ctn-layout-sub {
+    display: grid;
+    grid-template-columns: repeat(5, 150px);
+  }  
+
+  .ctn {
+    padding: 5px;
+    width: 150px;
+    height: 180px;
+    border: 1px solid #aaa;
+    border-radius: 15px;
+    /* box-shadow: 5px 5px 5px lightgrey; */
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    gap: 5px;
+  }
+}
+
+@media screen and (min-width: 1010px) {
+  .ctn-layout {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  .ctn-layout-sub {
+    display: flex;
+    gap: 10px;
+  } 
+
+  .ctn-layout-sub:last-child {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+  }
+
+  .ctn {
+    padding: 5px;
+    width: 150px;
+    height: 180px;
+    border: 1px solid #aaa;
+    border-radius: 15px;
+    /* box-shadow: 5px 5px 5px lightgrey; */
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    gap: 5px;
+  }
+}
+
