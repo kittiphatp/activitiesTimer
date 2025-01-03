@@ -7,10 +7,16 @@ let nodeArr = []
 // current node
 let nodeCurrent
 
-// buttons
+// controllers
+const tggCkbox = document.querySelector('#tgg-check')
+tggCkbox.checked = false
 const startController = document.querySelector('.start')
 const stopController = document.querySelector('.stop')
+const meetingController = document.querySelector('.meeting')
 const resetController = document.querySelector('.reset')
+
+// bar count up
+const barCountUp = document.querySelector('#bar-countup')
 
 // current timer
 let timerCurrent
@@ -20,12 +26,12 @@ let dateCurrent
 
 // interval timers
 let intervalWorking,
-  intervalBreak,
-  intervalLearn,
-  intervalSecondBreak,
-  intervalBook,
-  intervalMovie,
-  intervalGame;
+    intervalLearn,
+    intervalBook,
+    intervalMovie,
+    intervalGame,
+    intervalBreak,
+    intervalManuallyBreak
 
 // alert sound
 let alertSound
@@ -72,7 +78,7 @@ const stateArr = [
   }
 ];
 let stateIndex = 0;
-let stateSequence = [3, 5, 1, 5, 4, 5, 2, 5];
+let stateSequence = [2, 5, 3, 5, 1, 5, 4, 5];
 
 // function find current node
 const FindCurrentNode = () => {
@@ -131,7 +137,7 @@ const CountDown = () => {
   if(tbodyRef.children.length > 0) {
     const cell1Start = tbodyRef.children[0].children[0].innerText;
     const cell3Activity = tbodyRef.children[0].children[3].innerText;
-    if(cell3Activity === 'manually break'){
+    if(cell3Activity === 'manually break' || cell3Activity === 'meeting'){
       tbodyRef.children[0].children[1].innerText = dateCurrent
       tbodyRef.children[0].children[2].innerText = Math.floor((new Date(dateCurrent) - new Date(cell1Start)) / 60000)
   }}
@@ -157,38 +163,38 @@ const CountDown = () => {
       nodeCurrent.nodeProgressBar.style.width = `${(timerCurrent * 100) / stateArr[stateSequence[stateIndex]].defaultTimer}%`
     } 
     // 9.2. check timer timeout with false
-    else {
-      // 9.2.1. get current datetime
-      dateCurrent = GetCurrentDateTime()
-      // 9.2.2. update stop column in the current row of table
-      const tbodyRef = document.querySelector('table').getElementsByTagName('tbody')[0];
-      const cell1Start = tbodyRef.children[0].children[0].innerText;
-      tbodyRef.children[0].children[1].innerText = dateCurrent
-      tbodyRef.children[0].children[2].innerText = Math.floor((new Date(dateCurrent) - new Date(cell1Start)) / 60000)
-      // 9.2.3. highlight row if activity row is break
-      if(tbodyRef.children[0].children[3].innerText === 'break') {
-        tbodyRef.children[0].style.background = '#CCCCFF'
-      }
-      // 9.2.4. clear interval time
+    else {      
+      // 9.2.1. clear interval time
       clearInterval(stateArr[stateSequence[stateIndex]].interval)
-      // 9.2.5. setup timer to undefined
-      timerCurrent === undefined
-      // 9.2.6. setup sound
+      // 9.2.2. setup timer to undefined
+      timerCurrent = undefined
+      // 9.2.3. setup sound
+      const tbodyRef = document.querySelector('table').getElementsByTagName('tbody')[0];
       const cell3Activity = tbodyRef.children[0].children[3].innerText;
       cell3Activity === 'break' 
         ? alertSound = new Audio('./assets/sounds/alertBreak.mp3')
         : alertSound = new Audio('./assets/sounds/alertCompleted.mp3')
-      // 9.2.6. play alert sound
+      // 9.2.4. play alert sound
       alertSound.play()
-      // 9.2.7. show alert message
+      // 9.2.5. show alert message
       alert(stateArr[stateSequence[stateIndex]].completedMsg)
-      // 9.2.8. stop alert sound
+      // 9.2.6. get current datetime
+      dateCurrent = GetCurrentDateTime()
+      // 9.2.7. update stop column in the current row of table
+      const cell1Start = tbodyRef.children[0].children[0].innerText;
+      tbodyRef.children[0].children[1].innerText = dateCurrent
+      tbodyRef.children[0].children[2].innerText = Math.floor((new Date(dateCurrent) - new Date(cell1Start)) / 60000)
+      // 9.2.8. highlight row if activity row is break
+      if(tbodyRef.children[0].children[3].innerText === 'break') {
+        tbodyRef.children[0].style.background = '#CCCCFF'
+      }
+      // 9.2.9. stop alert sound
       alertSound.pause()
-      // 9.2.9. get next index of state
+      // 9.2.10. get next index of state
       stateIndex === stateSequence.length - 1 ? stateIndex = 0 : stateIndex += 1
-      // 9.2.10. update controller state to stop
+      // 9.2.11. update controller state to stop
       controllerState = 'stop'
-      // 9.2.11. click start button
+      // 9.2.12. click start button
       startController.click()
     }
   }, 1000)
@@ -212,40 +218,31 @@ const highlightState = () => {
   }
 }
 
-// new controller
-startController.addEventListener('click', () => {
-  if(controllerState !== 'start'){
-    controllerState = 'start'
+// function manually break or meeting
+const ManuallyBreakOrMeeting = (stopType) => {
+    if(controllerState !== stopType && controllerState !== undefined){
+    controllerState = stopType // manually break or meeting
     // 1. clear interval time
-    clearInterval(stateArr[stateSequence[stateIndex]].interval)
+        // 1.1. clear interval from sequence
+        clearInterval(stateArr[stateSequence[stateIndex]].interval)
+        // 1.2. clear interval from manually break or meeting
+        clearInterval(intervalManuallyBreak)
     // 2. clear all background color of controllers
     startController.style.background = '#fff'
     startController.style.borderStyle = 'none'
     stopController.style.background = '#fff'
     stopController.style.borderStyle = 'none'
-    resetController.style.background = '#fff'
-    // 3. highlight background color of start
-    startController.style.background = '#FFFF00'
-    startController.style.border = '2px solid #ff0000'
-    // 4. run timer
-    CountDown();
-  }
-})
-
-stopController.addEventListener('click', () => {
-  if(controllerState !== 'stop'){
-    controllerState = 'stop'
-    // 1. clear interval time
-    clearInterval(stateArr[stateSequence[stateIndex]].interval)
-    // 2. clear all background color of controllers
-    startController.style.background = '#fff'
-    startController.style.borderStyle = 'none'
-    stopController.style.background = '#fff'
-    stopController.style.borderStyle = 'none'
+    meetingController.style.background = '#fff'
+    meetingController.style.borderStyle = 'none'
     resetController.style.background = '#fff'
     // 3. highlight background color of stop
-    stopController.style.background = '#FFFF00'
-    stopController.style.border = '2px solid #ff0000'
+    if(stopType === 'manually break'){
+      stopController.style.background = '#FFFF00'
+      stopController.style.border = '2px solid #ff0000'
+    } else if (stopType === 'meeting') {
+      meetingController.style.background = '#FFFF00'
+      meetingController.style.border = '2px solid #ff0000'
+    }
     // 4. get current datetime
     dateCurrent = GetCurrentDateTime()  
     // 5. update stop column in the current row of table
@@ -262,16 +259,98 @@ stopController.addEventListener('click', () => {
     cell1.innerHTML = `${dateCurrent}`
     cell2.innerHTML = ``
     cell3.innerHTML = ``
-    cell4.innerHTML = `manually break`
+    cell4.innerHTML = stopType
     // 7. highlight row if activity row is break
     if(tbodyRef.children[0].children[3].innerText === 'break') {
       tbodyRef.children[0].style.background = '#CCCCFF'
     }
-    // 7. highlight row if activity row is break
-    if(tbodyRef.children[0].children[3].innerText === 'manually break') {
-      tbodyRef.children[0].style.background = '#fadbd8'
+    // 8. highlight row if activity row is manually break
+    if(tbodyRef.children[0].children[3].innerText === 'manually break' || tbodyRef.children[0].children[3].innerText === 'meeting') {
+      // 8.1. highlight with orange color
+      tbodyRef.children[0].style.background = stopType === 'manually break' ? '#fadbd8' : '#ffff00'
+      // 8.2. display bar count up
+      barCountUp.style.display = 'flex'
+      barCountUp.style.justifyContent = 'end'
+      barCountUp.style.alignItems = 'center'
+      barCountUp.style.backgroundColor = stopType === 'manually break' ? '#fadbd8' : '#ffff00'
+      // 8.3. run count up
+      let startCountup = 0
+      let secCountup = 0
+      let minCountup = 0
+      let hrCountup = 0
+      let dayCountup = 0
+      let displayCountup = '00:00:00'
+      intervalManuallyBreak = setInterval(() => {
+        startCountup += 1
+        // 00:00:00
+        // set second
+        secCountup = `${startCountup % 60 < 10 ? '0' : ''}${startCountup % 60}`
+        // set minute
+        minCountup = `${Math.floor((startCountup / 60) % 60) < 10 ? '0' : ''}${Math.floor((startCountup / 60) % 60)}`
+        // set hour
+        hrCountup = `${Math.floor(((startCountup / 60) / 60) % 24) < 10 ? '0' : ''}${Math.floor((minCountup / 60) % 24)}`
+        // set day
+        dayCountup = Math.floor(((startCountup / 60) / 60) / 24)
+        // format
+        // displayCountup = `day: ${dayCountup} | hour: ${hrCountup} | minute: ${minCountup} | second: ${secCountup}`
+        displayCountup = `${dayCountup}:${hrCountup}:${minCountup}:${secCountup}`
+        // show on screen
+        barCountUp.innerText = displayCountup
+      }, 1000)
     }
   }
+}
+
+
+// new controllers
+tggCkbox.addEventListener('click', () => {  
+  if(tggCkbox.checked){
+    // 1. update label
+    document.querySelector('#tgg-label').innerText = 'Work'
+    // 2. update state sequence
+    stateSequence = [0, 5, 0, 5, 1, 5, 0, 5];
+  } else {
+    // 1. update label
+    document.querySelector('#tgg-label').innerText = 'Leisure'
+    // 2. update state sequence
+    stateSequence = [2, 5, 3, 5, 1, 5, 4, 5];
+  }
+})
+
+startController.addEventListener('click', () => {
+  if(controllerState !== 'start'){
+    controllerState = 'start'
+    // 1. clear interval time
+      // 1.1. clear interval from sequence
+      clearInterval(stateArr[stateSequence[stateIndex]].interval)
+      // 1.2. clear interval from manually break or meeting
+      clearInterval(intervalManuallyBreak)
+      // 1.3. reset bar count up value to null
+      barCountUp.innerText = ''
+      // 1.4. hide bar count up
+      barCountUp.style.display = 'none'
+    // 2. clear all background color of controllers
+    startController.style.background = '#fff'
+    startController.style.borderStyle = 'none'
+    stopController.style.background = '#fff'
+    stopController.style.borderStyle = 'none'
+    meetingController.style.background = '#fff'
+    meetingController.style.borderStyle = 'none'
+    resetController.style.background = '#fff'
+    // 3. highlight background color of start
+    startController.style.background = '#FFFF00'
+    startController.style.border = '2px solid #ff0000'
+    // 4. run timer
+    CountDown();
+  }
+})
+
+stopController.addEventListener('click', () => {
+  ManuallyBreakOrMeeting('manually break')
+})
+
+meetingController.addEventListener('click', () => {
+  ManuallyBreakOrMeeting('meeting')
 })
 
 resetController.addEventListener('click', () => {
