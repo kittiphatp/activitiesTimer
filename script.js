@@ -295,7 +295,7 @@ const ManuallyBreakOrMeeting = (stopType) => {
         // set hour
         hrCountup = `${Math.floor(((startCountup / 60) / 60)) < 10 ? '0' : ''}${Math.floor((startCountup / 60) / 60)}`
         // set day
-        dayCountup = Math.floor(((startCountup / 60) / 60) % 24)
+        dayCountup = Math.floor(((startCountup / 60) / 60) / 24)
         // format
         // displayCountup = `day: ${dayCountup} | hour: ${hrCountup} | minute: ${minCountup} | second: ${secCountup}`
         displayCountup = `${dayCountup}:${hrCountup}:${minCountup}:${secCountup}`
