@@ -8,6 +8,8 @@ let nodeArr = []
 let nodeCurrent
 
 // controllers
+const rountinesCkbox = document.querySelector('#ck-routines')
+rountinesCkbox.checked = false
 const tggCkbox = document.querySelector('#tgg-check')
 tggCkbox.checked = false
 const startController = document.querySelector('.start')
@@ -16,6 +18,7 @@ const meetingController = document.querySelector('.meeting')
 const resetController = document.querySelector('.reset')
 
 // bar count up
+const barRoutines = document.querySelector('#bar-routines')
 const barCountUp = document.querySelector('#bar-countup')
 
 // current timer
@@ -31,10 +34,12 @@ let intervalWorking,
     intervalMovie,
     intervalGame,
     intervalBreak,
-    intervalManuallyBreak
+    intervalManuallyBreak,
+    intervalRoutines
 
 // alert sound
 let alertSound
+const alertRoutine = new Audio('./assets/sounds/alertRoutine.wav')
 
 // current controller state
 let controllerState
@@ -300,9 +305,121 @@ const ManuallyBreakOrMeeting = (stopType) => {
     }
   }
 }
-
+// function alert routine
+const AlertRoutine = (currentRoutineId) => {
+  // 1. highlight current routine
+  document.querySelector(`#${currentRoutineId}`).style.backgroundColor = '#ffff00'
+  // 2. run alert sound
+  alertRoutine.play()
+  // 3. clear highlight after 5 minutes
+  setTimeout(() => document.querySelector(`#${currentRoutineId}`).style.removeProperty("background-color"), 5 * 60 * 1000)
+}
 
 // new controllers
+rountinesCkbox.addEventListener('click', () => {  
+  if(rountinesCkbox.checked){
+    // 1. display routines bar
+    barRoutines.style.display = 'flex'
+    barRoutines.style.justifyContent = 'end'
+    barRoutines.style.alignItems = 'center'
+    barRoutines.style.gap = '10px'
+    // 2. setup group of routines list
+    let routinesDiv = document.createElement('div')
+    routinesDiv.append('shoppee')
+    routinesDiv.innerHTML = `
+                              <div id='shoppee'><input type="checkbox" id="every-hr">shoppee (3hrs)</div>
+                              <div id='lunchtime'>lunchtime</div>
+                              <div id='dinnertime'>dinnertime</div>
+    `
+    // 3. add routines list in the bar
+    barRoutines.innerHTML = routinesDiv.innerHTML
+    // 4. listen checkbox input of shoppee
+    const shoppeeCkbox = document.querySelector('#every-hr')
+    shoppeeCkbox.addEventListener('click', () => {
+      if(shoppeeCkbox.checked){
+        // 4.1. change label to (1hr)
+        document.querySelector('#shoppee').childNodes[1].textContent = 'shoppee (1hrs)'
+      } else {
+        // 4.1. change label to (3hr)
+        document.querySelector('#shoppee').childNodes[1].textContent = 'shoppee (3hrs)'
+      }
+    })
+    // 4. set variable now
+    let now
+     // 5. start interval routines timers
+    intervalRoutines = setInterval(() => {
+      now = new Date()
+      currentTimeStr = `${('0' + now.getHours()).slice(-2)}:${('0' + now.getMinutes()).slice(-2)}:${('0' + now.getSeconds()).slice(-2)}`
+      
+      // switch check current time and alert
+      switch(currentTimeStr) {
+        // shoppee
+        case '08:05:00':
+          AlertRoutine('shoppee')
+          break
+        case '09:05:00':
+          shoppeeCkbox.checked ? AlertRoutine('shoppee') : false
+          break
+        case '10:05:00':
+          shoppeeCkbox.checked ? AlertRoutine('shoppee') : false
+          break
+        case '11:05:00':
+          AlertRoutine('shoppee')
+          break
+        case '12:05:00':
+          shoppeeCkbox.checked ? AlertRoutine('shoppee') : false
+          break
+        case '13:05:00':
+          shoppeeCkbox.checked ? AlertRoutine('shoppee') : false
+          break
+        case '14:05:00':
+          AlertRoutine('shoppee')
+          break
+        case '15:05:00':
+          shoppeeCkbox.checked ? AlertRoutine('shoppee') : false
+          break
+        case '16:05:00':
+          shoppeeCkbox.checked ? AlertRoutine('shoppee') : false
+          break
+        case '17:05:00':
+          AlertRoutine('shoppee')
+          break
+        case '18:05:00':
+          shoppeeCkbox.checked ? AlertRoutine('shoppee') : false
+          break
+        case '19:05:00':
+          shoppeeCkbox.checked ? AlertRoutine('shoppee') : false
+          break
+        case '20:05:00':
+          AlertRoutine('shoppee')
+          break
+        case '21:05:00':
+          shoppeeCkbox.checked ? AlertRoutine('shoppee') : false
+          break
+
+        // lunch time
+        case '12:00:00':
+          AlertRoutine('lunchtime')
+          break
+  
+        // dinner time
+        case '17:58:00':
+          AlertRoutine('dinnertime')
+          break
+        default:
+          null
+      }
+    }, 1000)
+  } else {
+    // 1. off display
+    barRoutines.style.display = 'none'
+    // 2. clear routines list
+    barRoutines.innerHTML = null
+    // 3. clear interval time
+    clearInterval(intervalRoutines)
+  }
+})
+
 tggCkbox.addEventListener('click', () => {  
   if(tggCkbox.checked){
     // 1. update label

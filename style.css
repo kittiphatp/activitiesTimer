@@ -69,11 +69,30 @@
   align-items: center;
 }
 
+.hdb-control > label > span,
 .hdb-control > .tgg > span {
   color: white;
   font-size: 12px;
+  font-weight: 300;
 }
 
+/* Bar routines */
+#bar-routines{
+  width: 100%;
+  height: 30px;
+  background-color: #abebc6;
+  color: #000;
+  display: none;
+}
+#bar-routines > * {
+  padding: 0px 8px;
+  width: auto;
+  height: 100%;
+  /* border: 1px solid #fff; */
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+}
 
 /* Bar count up */
 #bar-countup{
