@@ -15,6 +15,7 @@ tggCkbox.checked = false
 const startController = document.querySelector('.start')
 const stopController = document.querySelector('.stop')
 const meetingController = document.querySelector('.meeting')
+const skipController = document.querySelector('.skip')
 const resetController = document.querySelector('.reset')
 
 // bar count up
@@ -314,6 +315,11 @@ const AlertRoutine = (currentRoutineId) => {
   // 3. clear highlight after 5 minutes
   setTimeout(() => document.querySelector(`#${currentRoutineId}`).style.removeProperty("background-color"), 5 * 60 * 1000)
 }
+// function skip
+const SkipState = () => {
+  timerCurrent = 1
+  startController.click()
+}
 
 // new controllers
 rountinesCkbox.addEventListener('click', () => {  
@@ -468,6 +474,10 @@ stopController.addEventListener('click', () => {
 
 meetingController.addEventListener('click', () => {
   ManuallyBreakOrMeeting('meeting')
+})
+
+skipController.addEventListener('click', () => {
+  SkipState()
 })
 
 resetController.addEventListener('click', () => {

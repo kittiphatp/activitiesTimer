@@ -35,6 +35,7 @@
 .hdb-control > .start,
 .hdb-control > .stop,
 .hdb-control > .meeting,
+.hdb-control > .skip,
 .hdb-control > .reset {
   width: 25px;
   height: 25px;
@@ -49,6 +50,7 @@
 .hdb-control > .start:hover,
 .hdb-control > .stop:hover,
 .hdb-control > .meeting:hover,
+.hdb-control > .skip:hover,
 .hdb-control > .reset:hover {
   background-color: #ffff00;
 }
@@ -56,6 +58,7 @@
 .hdb-control > .start > img,
 .hdb-control > .stop > img,
 .hdb-control > .meeting > img,
+.hdb-control > .skip > img,
 .hdb-control > .reset > img {
   object-fit: contain;
   width: 12px;
